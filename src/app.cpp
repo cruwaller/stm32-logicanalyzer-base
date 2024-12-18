@@ -157,6 +157,13 @@ static void FAST_CODE_1 pin_event_capture_cb(void)
         .us     = timer_counter_get(),
         .states = gpio_in_read_group(m_pins_in),
     };
+#ifdef STM32F7xx
+    EXTI->PR = 0xffff;
+#elif STM32G0xx
+    EXTI->RPR1 = 0xffff;
+#else
+    EXTI->PR1 = 0xffff;
+#endif
 #endif
 }
 
@@ -179,11 +186,21 @@ void send_data_buff(void)
     size_t len = ((uintptr_t)m_pin_info_ptr - (uintptr_t)m_data_resp.msg.data);
     size_t count = len / sizeof(pin_info_t);
     if (count) {
+        uint8_t * p_source = m_data_resp.buffer;
         len += offsetof(data_msg_buff_t, msg.data);
         m_data_resp.msg.count     = count;
         m_data_resp.buffer[len++] = TERMINATOR_BYTE1;
         m_data_resp.buffer[len++] = TERMINATOR_BYTE2;
-        Serial.write(m_data_resp.buffer, len);
+        // Send in chunks
+        #define CHUNK_SIZE 1024
+        int8_t chunks = (len / CHUNK_SIZE);
+        while (chunks--) {
+            Serial.write(p_source, CHUNK_SIZE);
+            len -= CHUNK_SIZE;
+            p_source += CHUNK_SIZE;
+        }
+        Serial.write(p_source, len);
+        delay(10);
     }
     send_ack_nack(true);
 }

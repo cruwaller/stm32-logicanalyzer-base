@@ -331,7 +331,9 @@ int gpio_irq_get(uint8_t const pin)
     return EXTI0_IRQn + pin;
 }
 
-gpio_isr_cb_t gpio_callback[7];
+void gpio_callback_dummy(void) {}
+
+gpio_isr_cb_t gpio_callback[7] = {gpio_callback_dummy};
 
 void gpio_isr_set(gpio_isr_cb_t cb, IRQn_Type irqnb)
 {
@@ -381,52 +383,38 @@ void RCC_IRQHandler(void)
 
 void FAST_CODE_1 EXTI0_IRQHandler(void)
 {
-    gpio_isr_cb_t cb = gpio_callback[0];
-    if (cb)
-        cb();
-    EXTI->PR1 = 1;
+    gpio_callback[0]();
+    //EXTI->PR1 = 1;
 }
 void FAST_CODE_1 EXTI1_IRQHandler(void)
 {
-    gpio_isr_cb_t cb = gpio_callback[1];
-    if (cb)
-        cb();
-    EXTI->PR1 = 1 << 1;
+    gpio_callback[1]();
+    //EXTI->PR1 = 1 << 1;
 }
 void FAST_CODE_1 EXTI2_IRQHandler(void)
 {
-    gpio_isr_cb_t cb = gpio_callback[2];
-    if (cb)
-        cb();
-    EXTI->PR1 = 1 << 2;
+    gpio_callback[2]();
+    //EXTI->PR1 = 1 << 2;
 }
 void FAST_CODE_1 EXTI3_IRQHandler(void)
 {
-    gpio_isr_cb_t cb = gpio_callback[3];
-    if (cb)
-        cb();
-    EXTI->PR1 = 1 << 3;
+    gpio_callback[3]();
+    //EXTI->PR1 = 1 << 3;
 }
 void FAST_CODE_1 EXTI4_IRQHandler(void)
 {
-    gpio_isr_cb_t cb = gpio_callback[4];
-    if (cb)
-        cb();
-    EXTI->PR1 = 1 << 4;
+    gpio_callback[4]();
+    //EXTI->PR1 = 1 << 4;
 }
 void FAST_CODE_1 EXTI9_5_IRQHandler(void)
 {
-    gpio_isr_cb_t cb = gpio_callback[5];
-    if (cb)
-        cb();
-    EXTI->PR1 = 0x3E0;
+    gpio_callback[5]();
+    //EXTI->PR1 = 0x3E0;
 }
 void FAST_CODE_1 EXTI15_10_IRQHandler(void)
 {
-    gpio_isr_cb_t cb = gpio_callback[6];
-    if (cb)
-        cb();
-    EXTI->PR1 = 0xFE00;
+    gpio_callback[6]();
+    //EXTI->PR1 = 0xFE00;
 }
 
 void DMA1_Channel1_IRQHandler(void)
