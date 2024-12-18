@@ -1,0 +1,42 @@
+{
+  "build": {
+    "cpu": "cortex-m4",
+    "extra_flags": "-DSTM32L476xx=1 -DSTM32L4xx=1 -DSTM32L4=1",
+    "f_cpu": "80000000L",
+    "mcu": "stm32l476rgt6",
+    "product_line": "STM32L476xx",
+    "ldscript": "variants/L476R/ldscript.ld",
+    "variants_dir": "variants",
+    "variant": "L476R"
+  },
+  "debug": {
+    "default_tools": [
+      "stlink"
+    ],
+    "jlink_device": "STM32L476RG",
+    "onboard_tools": [
+      "stlink"
+    ],
+    "openocd_target": "stm32l4x",
+    "svd_path": "STM32L4x6.svd"
+  },
+  "frameworks": [
+    "arduino",
+    "cmsis",
+    "stm32cube"
+  ],
+  "name": "STM32L476RG",
+  "upload": {
+    "maximum_ram_size": 131072,
+    "maximum_size": 1048576,
+    "protocol": "stlink",
+    "protocols": [
+      "jlink",
+      "stlink",
+      "blackmagic",
+      "mbed"
+    ]
+  },
+  "url": "https://www.st.com/en/microcontrollers-microprocessors/stm32l476rg.html",
+  "vendor": "ST"
+}

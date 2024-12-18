@@ -1,0 +1,30 @@
+
+/* Linker script for STM32F722RE Device with 512KByte FLASH, 256KByte RAM */
+
+/* Specify the memory areas */
+MEMORY
+{
+  ITCM_RAM (rx)   : ORIGIN = 0x00000000, LENGTH = 16K
+
+  DTCM_RAM (rwx)  : ORIGIN = 0x20000000, LENGTH = 64K
+  SRAM1 (rwx)     : ORIGIN = 0x20010000, LENGTH = 176K
+  SRAM2 (rwx)     : ORIGIN = 0x2003C000, LENGTH = 16K
+
+  FLASH (rx)      : ORIGIN = 0x08000000, LENGTH = 512K - 128K
+  /*STORAGE(rwx)    : ORIGIN = ORIGIN(FLASH) + LENGTH(FLASH), LENGTH = 128K*/
+  STORAGE(rw)     : ORIGIN = 0x0807c000, LENGTH = 16K
+}
+
+/* Flash pages are 4x16k + 1x64k + 3x128k */
+/* FIXME: Change sector to 0...3 at some point */
+__EEPROM_SECTOR = 7;
+__EEPROM_SECTOR_CNT = 1;
+
+REGION_ALIAS("RAM_CODE", ITCM_RAM)
+REGION_ALIAS("FLASH_RAM_CODE", FLASH)
+
+REGION_ALIAS("RAM_DATA", DTCM_RAM)
+REGION_ALIAS("DMA_DATA", SRAM1)
+REGION_ALIAS("FLASH_STORAGE", STORAGE)
+
+INCLUDE "variants/ldscript_gen.ld"
